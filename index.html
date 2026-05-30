@@ -1,39 +1,287 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>En mémoire de Dr. TOGBEY Kwamy Maoussi Félix</title>
-  <style>
-    :root { --ivory:#fbf7ee; --gold:#9e7938; --ink:#2c2a2a; }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; background: var(--ivory); color: var(--ink);
-      font-family: Georgia, "Times New Roman", serif;
-      text-align: center; padding: 32px 16px 56px;
-    }
-    h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 4px; }
-    .dates { color: var(--gold); font-style: italic; margin: 0 0 28px; }
-    img.flyer {
-      width: 100%; max-width: 520px; height: auto;
-      box-shadow: 0 6px 24px rgba(0,0,0,.18); border-radius: 4px;
-    }
-    .actions { margin-top: 24px; }
-    .actions a {
-      display: inline-block; text-decoration: none;
-      border: 1px solid var(--gold); color: var(--gold);
-      padding: 10px 24px; border-radius: 999px; font-size: .95rem;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>En mémoire de Dr. TOGBEY Kwamy Maoussi Félix · 1948 – 2026</title>
+<meta name="description" content="En mémoire de Dr. TOGBEY Kwamy Maoussi Félix (1948 – 2026). Programme des cérémonies, faire-part et souvenirs." />
+<link rel="icon" type="image/png" href="img/favicon.png" />
+
+<!-- Open Graph / WhatsApp share preview -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="En mémoire de Dr. TOGBEY Kwamy Maoussi Félix" />
+<meta property="og:description" content="1948 – 2026 · Programme des cérémonies, faire-part et souvenirs." />
+<meta property="og:image" content="https://wisedem.github.io/togbey-memorial/img/share.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://wisedem.github.io/togbey-memorial/" />
+<meta property="og:locale" content="fr_FR" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<style>
+  @font-face { font-family:'EB Garamond'; src:url('fonts/EBGaramond.ttf') format('truetype'); font-weight:400 700; font-style:normal; font-display:swap; }
+  @font-face { font-family:'EB Garamond'; src:url('fonts/EBGaramond-Italic.ttf') format('truetype'); font-weight:400 700; font-style:italic; font-display:swap; }
+  @font-face { font-family:'Pinyon Script'; src:url('fonts/PinyonScript-Regular.ttf') format('truetype'); font-weight:400; font-style:normal; font-display:swap; }
+
+  :root{
+    --ivory:#fbf7ee; --ivory-deep:#f5eede;
+    --gold-dark:#9e7938; --gold:#c49e56; --gold-pale:#e0c894;
+    --ink:#2c2a2a; --ink-soft:#424040; --subtle:#807c7c;
+    --sage-dark:#607456; --sage:#8ea580;
+    --maxw:760px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--ivory); color:var(--ink);
+    font-family:'EB Garamond', Georgia, serif; font-size:19px; line-height:1.7;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
+  h1,h2,h3{font-weight:700; line-height:1.2; margin:0;}
+  .script{font-family:'Pinyon Script', cursive; font-weight:400; color:var(--gold-dark); line-height:1.1;}
+  .ital{font-style:italic;}
+  a{color:var(--gold-dark);}
+
+  /* ---- slim nav ---- */
+  nav{
+    position:sticky; top:0; z-index:20; background:rgba(251,247,238,.86);
+    backdrop-filter:saturate(140%) blur(8px);
+    border-bottom:1px solid rgba(158,121,56,.18);
+  }
+  nav .wrap{display:flex; justify-content:center; gap:6px 26px; flex-wrap:wrap; padding:13px 24px;}
+  nav a{
+    text-decoration:none; color:var(--ink-soft); font-size:14px;
+    letter-spacing:.16em; text-transform:uppercase;
+  }
+  nav a:hover{color:var(--gold-dark);}
+
+  /* ---- floral corner decorations ---- */
+  .floral{position:absolute; width:230px; max-width:42vw; opacity:.85; pointer-events:none; z-index:0;}
+  .fl-tl{top:0; left:0;}
+  .fl-tr{top:0; right:0; transform:scaleX(-1);}
+  .fl-bl{bottom:0; left:0; transform:scaleY(-1);}
+  .fl-br{bottom:0; right:0; transform:scale(-1,-1);}
+
+  /* ---- hero ---- */
+  header.hero{position:relative; text-align:center; padding:64px 0 40px; overflow:hidden;}
+  .hero .tagline{font-style:italic; color:var(--ink-soft); font-size:1.15rem; margin-bottom:30px; position:relative; z-index:1;}
+  .portrait{position:relative; z-index:1; width:300px; max-width:72vw; height:auto;
+            filter:drop-shadow(0 10px 28px rgba(60,48,20,.22));}
+  .hero h1{position:relative; z-index:1; margin-top:30px; font-size:clamp(2rem,7vw,3.1rem); letter-spacing:.01em;}
+  .hero h1 .pre{display:block; font-size:.62em; font-weight:600; letter-spacing:.12em; color:var(--ink-soft); margin-bottom:4px;}
+  .lifespan{position:relative; z-index:1; margin-top:14px; color:var(--gold-dark);
+            font-size:1.5rem; font-weight:600; letter-spacing:.18em;}
+
+  /* ---- ornamental divider ---- */
+  .rule{display:flex; align-items:center; justify-content:center; gap:14px; margin:30px auto; color:var(--gold-dark);}
+  .rule:before,.rule:after{content:""; height:1px; width:90px; background:linear-gradient(90deg,transparent,var(--gold-dark));}
+  .rule:after{background:linear-gradient(90deg,var(--gold-dark),transparent);}
+  .rule .lozenge{width:11px; height:11px; background:var(--gold-dark); transform:rotate(45deg);}
+
+  /* ---- generic section ---- */
+  section{padding:54px 0; position:relative;}
+  .band{background:var(--ivory-deep);}
+  .eyebrow{text-align:center; text-transform:uppercase; letter-spacing:.26em; font-size:.78rem; color:var(--subtle); margin-bottom:8px;}
+  h2.sec{text-align:center; font-size:clamp(1.7rem,5vw,2.3rem); color:var(--ink); margin-bottom:6px;}
+  .sec-script{text-align:center; font-size:2.6rem; margin-bottom:22px;}
+
+  /* ---- dates band ---- */
+  .dates-sentence{text-align:center; font-style:italic; color:var(--ink-soft); font-size:1.25rem; max-width:640px; margin:0 auto;}
+  .tribute-line{text-align:center; margin-top:26px; font-size:2.3rem;}
+
+  /* ---- ceremony cards ---- */
+  .card{background:var(--ivory); border:1px solid rgba(158,121,56,.28); border-radius:14px;
+        padding:30px 30px 34px; margin:22px auto 0; max-width:620px;
+        box-shadow:0 6px 26px rgba(60,48,20,.06);}
+  .card h3{text-align:center; font-family:'Pinyon Script',cursive; font-weight:400; color:var(--gold-dark); font-size:2.1rem; margin-bottom:18px;}
+  .card p{margin:0 0 4px;}
+  .ctr{text-align:center;}
+  .muted{color:var(--subtle);}
+  .lieu-label{text-align:center; letter-spacing:.3em; font-size:.8rem; color:var(--subtle); margin-top:18px;}
+  .lieu-name{text-align:center; font-weight:700; font-size:1.2rem; color:var(--ink);}
+  .addr{text-align:center; color:var(--ink-soft); font-size:.98rem;}
+
+  .timeline{max-width:620px; margin:0 auto;}
+  .day{font-weight:700; color:var(--gold-dark); text-align:center; font-size:1.25rem; margin:26px 0 14px; letter-spacing:.02em;}
+  .event{display:flex; gap:16px; padding:12px 4px; border-top:1px solid rgba(158,121,56,.16);}
+  .event .time{flex:0 0 70px; font-weight:700; color:var(--ink); text-align:right;}
+  .event .what{flex:1; color:var(--ink-soft);}
+  .event .what b{color:var(--ink); font-weight:700;}
+
+  /* ---- buttons / item links ---- */
+  .items{display:grid; grid-template-columns:1fr; gap:16px; max-width:560px; margin:6px auto 0;}
+  .item{display:flex; align-items:center; gap:16px; text-decoration:none; color:var(--ink);
+        background:var(--ivory); border:1px solid rgba(158,121,56,.3); border-radius:12px; padding:16px 18px;
+        transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;}
+  .item:hover{transform:translateY(-2px); box-shadow:0 8px 22px rgba(60,48,20,.1); border-color:var(--gold-dark);}
+  .item .ic{flex:0 0 26px; color:var(--gold-dark);}
+  .item .t{font-weight:700;}
+  .item .s{display:block; font-size:.86rem; color:var(--subtle); font-weight:400;}
+
+  /* ---- gallery ---- */
+  .gallery{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; margin-top:8px;}
+  .gallery figure{margin:0; background:var(--ivory); border:1px solid rgba(158,121,56,.22); border-radius:12px; overflow:hidden; box-shadow:0 6px 20px rgba(60,48,20,.07);}
+  .gallery img{display:block; width:100%; height:280px; object-fit:cover;}
+  .gallery figcaption{padding:12px 14px; text-align:center; color:var(--ink-soft); font-style:italic; font-size:.95rem;}
+
+  /* ---- tribute close ---- */
+  .close{position:relative; text-align:center; padding:70px 0 80px; overflow:hidden;}
+  .close .rip{font-size:clamp(3rem,12vw,4.6rem);}
+  .close .love{font-size:clamp(2.4rem,9vw,3.4rem); margin-top:8px;}
+  .close .nm{margin-top:26px; color:var(--ink); font-weight:600; letter-spacing:.04em;}
+  .close .ls{color:var(--subtle); letter-spacing:.18em;}
+
+  footer{text-align:center; padding:26px 16px 40px; color:var(--subtle); font-size:.82rem;}
+
+  /* ---- reveal animation ---- */
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .9s ease, transform .9s ease;}
+  .reveal.in{opacity:1; transform:none;}
+  @media (prefers-reduced-motion:reduce){ .reveal{opacity:1; transform:none; transition:none;} html{scroll-behavior:auto;} }
+
+  @media (max-width:560px){
+    body{font-size:18px;}
+    .floral{width:150px; opacity:.7;}
+    .event .time{flex-basis:58px;}
+  }
+</style>
 </head>
 <body>
-  <h1>Dr. TOGBEY Kwamy Maoussi Félix</h1>
-  <p class="dates">20 novembre 1948 &nbsp;–&nbsp; 24 mai 2026</p>
 
-  <img class="flyer" src="flyer_single.png" alt="Flyer mémorial" />
-
-  <div class="actions">
-    <a href="flyer_single.png" download>Télécharger le flyer</a>
+<nav>
+  <div class="wrap">
+    <a href="#ceremonies">Cérémonies</a>
+    <a href="#faire-part">Faire-part</a>
+    <a href="#souvenirs">Souvenirs</a>
+    <a href="#hommage">Hommage</a>
   </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <img class="floral fl-tl" src="img/floral-corner.png" alt="" aria-hidden="true" />
+  <img class="floral fl-br" src="img/floral-corner.png" alt="" aria-hidden="true" />
+  <div class="wrap reveal">
+    <p class="tagline">En Mémoire de Notre Très Cher et Regretté</p>
+    <img class="portrait" src="img/oval.png" alt="Portrait de Dr. TOGBEY Kwamy Maoussi Félix" />
+    <h1><span class="pre">Dr.</span>TOGBEY Kwamy Maoussi Félix</h1>
+    <div class="lifespan">1948 &nbsp;–&nbsp; 2026</div>
+    <div class="rule"><span class="lozenge"></span></div>
+  </div>
+</header>
+
+<!-- ============ DATES SENTENCE ============ -->
+<section class="band">
+  <div class="wrap reveal">
+    <p class="dates-sentence">Rappelé à Dieu le 24 mai 2026 au CHU Sylvanus Olympio dans sa 78ᵉ année.</p>
+    <p class="tribute-line script">Tu resteras à jamais dans nos cœurs.</p>
+  </div>
+</section>
+
+<!-- ============ CÉRÉMONIES (service) ============ -->
+<section id="ceremonies">
+  <div class="wrap reveal">
+    <p class="eyebrow">Programme</p>
+    <h2 class="sec">Cérémonies</h2>
+
+    <div class="card">
+      <h3>Programme des Salutations</h3>
+      <p class="ctr">Les salutations de compassion seront reçues de 16h00 à 20h00&nbsp;:</p>
+      <p class="ctr">Tous les jeudis, vendredis et samedis</p>
+      <p class="ctr muted">du 28 mai au 20 juin 2026</p>
+      <p class="ctr" style="margin-top:10px;">Du lundi 22 au mercredi 24 juin 2026</p>
+      <p class="lieu-label">LIEU</p>
+      <p class="lieu-name">Maison TOGBEY Félix</p>
+      <p class="addr">Quartier Tokoin Kodomé · 3ème von à droite · en face du marché</p>
+    </div>
+
+    <div class="card">
+      <h3>Programme des Obsèques</h3>
+      <div class="timeline">
+        <div class="day">Vendredi 26 juin 2026</div>
+        <div class="event">
+          <div class="time">18h30</div>
+          <div class="what">Veillée de prières et de chants à l'<b>Église Baptiste Biblique de Tokoin-Solidarité</b>, suivie de l'exposition du corps <b>au domicile du défunt</b>.</div>
+        </div>
+        <div class="day">Samedi 27 juin 2026</div>
+        <div class="event">
+          <div class="time">07h00</div>
+          <div class="what">Levée du corps, suivie de la messe d'enterrement et de remerciements à la même église.</div>
+        </div>
+        <div class="event">
+          <div class="time">13h00</div>
+          <div class="what">Enterrement à <b>Agomé-Glozou</b> (Bas-Mono).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAIRE-PART (funeral items) ============ -->
+<section id="faire-part" class="band">
+  <div class="wrap reveal">
+    <p class="eyebrow">À télécharger</p>
+    <h2 class="sec">Faire-part &amp; souvenirs</h2>
+    <div class="items">
+      <a class="item" href="flyer_single.png" download>
+        <span class="ic">⬇</span>
+        <span><span class="t">Faire-part (Français)</span><span class="s">Image à partager ou imprimer</span></span>
+      </a>
+      <a class="item" href="flyer_single_en.png" download>
+        <span class="ic">⬇</span>
+        <span><span class="t">Memorial flyer (English)</span><span class="s">Image to share or print</span></span>
+      </a>
+      <a class="item" href="img/plaque.png" download>
+        <span class="ic">⬇</span>
+        <span><span class="t">Plaque commémorative</span><span class="s">Image souvenir en haute résolution</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOUVENIRS (memories gallery) ============ -->
+<section id="souvenirs">
+  <div class="wrap reveal">
+    <p class="eyebrow">En images</p>
+    <h2 class="sec">Souvenirs</h2>
+    <p class="ctr muted" style="max-width:560px;margin:0 auto 22px;">Quelques images en mémoire d'une vie aimée et respectée.</p>
+    <!-- To add more memories, drop photos in img/ and copy a <figure> block below. -->
+    <div class="gallery">
+      <figure>
+        <img src="img/portrait.png" alt="Portrait de Dr. TOGBEY Kwamy Maoussi Félix" />
+        <figcaption>Dr. TOGBEY Kwamy Maoussi Félix</figcaption>
+      </figure>
+      <figure>
+        <img src="img/plaque.png" alt="Plaque commémorative" />
+        <figcaption>Plaque commémorative</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOMMAGE (tribute close) ============ -->
+<section class="close" id="hommage">
+  <img class="floral fl-tl" src="img/floral-corner.png" alt="" aria-hidden="true" />
+  <img class="floral fl-br" src="img/floral-corner.png" alt="" aria-hidden="true" />
+  <div class="wrap reveal">
+    <div class="rule"><span class="lozenge"></span></div>
+    <p class="script rip">Repose en paix.</p>
+    <p class="script love">We love you!</p>
+    <p class="nm">Dr. TOGBEY Kwamy Maoussi Félix</p>
+    <p class="ls">1948 &nbsp;–&nbsp; 2026</p>
+  </div>
+</section>
+
+<footer>
+  En mémoire · 20 novembre 1948 – 24 mai 2026
+</footer>
+
+<script>
+  // subtle fade-ins on scroll
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
 </body>
 </html>
