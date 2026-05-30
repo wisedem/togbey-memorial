@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>En mémoire de Dr. TOGBEY Kwamy Maoussi Félix</title>
+  <style>
+    :root { --ivory:#fbf7ee; --gold:#9e7938; --ink:#2c2a2a; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--ivory); color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      text-align: center; padding: 32px 16px 56px;
+    }
+    h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 4px; }
+    .dates { color: var(--gold); font-style: italic; margin: 0 0 28px; }
+    .tabs { margin-bottom: 20px; }
+    .tabs button {
+      font: inherit; cursor: pointer; border: 1px solid var(--gold);
+      background: transparent; color: var(--gold);
+      padding: 8px 20px; margin: 0 4px; border-radius: 999px;
+    }
+    .tabs button.active { background: var(--gold); color: var(--ivory); }
+    img.flyer {
+      width: 100%; max-width: 520px; height: auto;
+      box-shadow: 0 6px 24px rgba(0,0,0,.18); border-radius: 4px;
+    }
+    .actions { margin-top: 20px; }
+    .actions a {
+      display: inline-block; text-decoration: none;
+      border: 1px solid var(--gold); color: var(--gold);
+      padding: 10px 22px; border-radius: 999px; font-size: .95rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dr. TOGBEY Kwamy Maoussi Félix</h1>
+  <p class="dates">20 novembre 1948 &nbsp;–&nbsp; 24 mai 2026</p>
+
+  <div class="tabs">
+    <button id="btn-fr" class="active" onclick="show('fr')">Français</button>
+    <button id="btn-en" onclick="show('en')">English</button>
+  </div>
+
+  <img id="flyer" class="flyer" src="flyer_single.png" alt="Flyer mémorial (français)" />
+
+  <div class="actions">
+    <a id="dl" href="flyer_single.png" download>Télécharger le flyer</a>
+  </div>
+
+  <script>
+    function show(lang) {
+      var fr = lang === 'fr';
+      var file = fr ? 'flyer_single.png' : 'flyer_single_en.png';
+      document.getElementById('flyer').src = file;
+      document.getElementById('flyer').alt = fr ? 'Flyer mémorial (français)' : 'Memorial flyer (English)';
+      var dl = document.getElementById('dl');
+      dl.href = file;
+      dl.textContent = fr ? 'Télécharger le flyer' : 'Download the flyer';
+      document.getElementById('btn-fr').classList.toggle('active', fr);
+      document.getElementById('btn-en').classList.toggle('active', !fr);
+    }
+  </script>
+</body>
+</html>
