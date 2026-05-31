@@ -19,7 +19,7 @@ import sys
 import urllib.request
 import urllib.error
 
-API_BASE = "https://www.cognitoforms.com/api/1"
+API_BASE = "https://www.cognitoforms.com/api/v1"
 FORMS = [("7", "en"), ("8", "fr")]          # (Cognito form id, language tag)
 OUT = "tributes.json"
 PAGE_SIZE = 100
@@ -131,6 +131,11 @@ def main():
     if not key:
         print("sync_tributes: COGNITO_API_KEY not set", file=sys.stderr)
         return 1
+    try:                                                      # diagnostic: confirm base/auth + real form ids
+        forms = _api_get("/forms", key)
+        print("AVAILABLE FORMS:", json.dumps(forms, ensure_ascii=False)[:2000])
+    except Exception as e:  # noqa: BLE001
+        print("sync_tributes: could not list forms: %s" % e, file=sys.stderr)
     forms_entries = []
     for form_id, lang in FORMS:
         try:
