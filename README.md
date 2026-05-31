@@ -20,6 +20,37 @@ if the content changes later (e.g. a future custom domain or expanded website).
 
 The QR code embedded in both flyers points to the landing page above.
 
+## Tribute wall (public condolences)
+
+Visitors leave messages through the embedded Cognito forms (FR form #8, EN form #7). After
+submitting, a thank-you pop-up appears. Messages the author agreed to share publicly can be shown
+on the **Tribute Wall** / **Mur d'hommages** section of each page.
+
+**How public messages appear — curated, moderated:**
+The wall reads from [`tributes.json`](tributes.json). Nothing is published automatically — the family
+adds approved messages by hand. The wall section stays hidden until the file contains at least one
+matching entry.
+
+To add an approved message, add an object to the array in `tributes.json`:
+
+```json
+[
+  {"name":"Akossiwa M.","message":"Un homme bon et juste.","lang":"fr","place":"Lomé, Togo","date":"2026-05-29"},
+  {"name":"James O.","message":"A gentle, brilliant man. Rest well.","lang":"en"}
+]
+```
+
+- `name`, `message` — required. `lang` — `"fr"` shows on the French page, `"en"` on the English page.
+- `place`, `date` (ISO `YYYY-MM-DD`) — optional. Entries display in file order.
+- Keep it valid JSON: comma between objects, **no** trailing comma after the last one
+  (check at jsonlint.com). Commit + push and it appears within a few minutes.
+- Message text is rendered safely as plain text (no HTML/script execution).
+
+**Cognito setup (one-time, per form #7 and #8):** add a Yes/No field named **`Share`**
+("Share my message publicly?" / "Partager mon message publiquement ?", default *No*). Its value is
+what tells you which messages you may copy into `tributes.json`, and it drives the pop-up's
+"will appear after review" note. The rendering logic lives in [`js/tributes.js`](js/tributes.js).
+
 ## Source (generators)
 
 The [`src/`](src/) folder holds the Python (Pillow) scripts that generate every print piece,

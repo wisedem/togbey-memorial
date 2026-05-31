@@ -142,6 +142,24 @@
         padding:26px 26px 22px; box-shadow:0 6px 26px rgba(60,48,20,.06);}
   .cond-note{max-width:560px; margin:16px auto 0; text-align:center; color:var(--subtle); font-size:.85rem; font-style:italic;}
 
+  /* ---- tribute wall ---- */
+  .tribute-wall{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; max-width:680px; margin:8px auto 0;}
+  .tribute-card{margin:0; padding:24px 24px 20px; max-width:none; text-align:left;}
+  .tribute-msg{margin:0 0 14px; font-style:italic; color:var(--ink-soft); line-height:1.6;}
+  .tribute-msg:before{content:"\201C"; font-family:'Pinyon Script',cursive; color:var(--gold-pale); font-size:2.2rem; line-height:0; margin-right:.08em; vertical-align:-.35em;}
+  .tribute-by{display:flex; flex-direction:column; gap:2px;}
+  .tribute-name{font-weight:700; color:var(--gold-dark); letter-spacing:.02em;}
+  .tribute-meta{font-size:.82rem; color:var(--subtle); letter-spacing:.04em;}
+
+  /* ---- thank-you modal ---- */
+  .modal-scrim{position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center; padding:24px; background:rgba(44,42,42,.55); backdrop-filter:blur(3px); opacity:0; transition:opacity .25s ease;}
+  .modal-scrim.open{opacity:1;}
+  .modal-card{position:relative; background:var(--ivory); border:1px solid rgba(158,121,56,.4); border-radius:18px; padding:34px 30px 30px; max-width:440px; width:100%; text-align:center; box-shadow:0 18px 60px rgba(60,48,20,.28); transform:translateY(14px); transition:transform .25s ease;}
+  .modal-scrim.open .modal-card{transform:none;}
+  .modal-x{position:absolute; top:8px; right:14px; background:none; border:none; font-size:1.9rem; line-height:1; color:var(--subtle); cursor:pointer;}
+  .modal-x:hover{color:var(--gold-dark);}
+  @media (prefers-reduced-motion:reduce){ .modal-scrim,.modal-card{transition:none;} }
+
   /* ---- tribute close ---- */
   .close{position:relative; text-align:center; padding:70px 0 80px; overflow:hidden;}
   .close .rip{font-size:clamp(3rem,12vw,4.6rem);}
@@ -173,6 +191,7 @@
     <a href="#faire-part">Faire-part</a>
     <a href="#souvenirs">Souvenirs</a>
     <a href="#condolences">Condoléances</a>
+    <a href="#tributes">Témoignages</a>
     <a href="#hommage">Hommage</a>
     <span class="lang"><a href="./" class="on">FR</a><a href="en/">EN</a></span>
   </div>
@@ -298,7 +317,17 @@
     <div class="cond">
       <script src="https://www.cognitoforms.com/f/seamless.js" data-key="6yjYn7sMzkyLz86co0Vx9g" data-form="8"></script>
     </div>
-    <p class="cond-note">Vos coordonnées resteront confidentielles et ne seront pas publiées.</p>
+    <p class="cond-note">Vos coordonnées restent confidentielles. Seuls les messages dont vous autorisez le partage pourront paraître sur le mur d'hommages, après relecture par la famille.</p>
+  </div>
+</section>
+
+<!-- ============ MUR D'HOMMAGES (public tribute wall) ============ -->
+<section id="tributes" hidden>
+  <div class="wrap reveal">
+    <p class="eyebrow">Messages partagés</p>
+    <h2 class="sec">Mur d'hommages</h2>
+    <p class="ctr muted" style="max-width:560px;margin:0 auto 22px;">Quelques messages que leurs auteurs ont accepté de partager publiquement, en hommage à une vie aimée et respectée.</p>
+    <div class="tribute-wall" id="tribute-wall"><!-- cartes injectées par JS --></div>
   </div>
 </section>
 
@@ -319,6 +348,18 @@
   En mémoire · 20 novembre 1948 – 24 mai 2026
 </footer>
 
+<!-- ============ THANK-YOU MODAL ============ -->
+<div class="modal-scrim" id="thanks-modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="thanks-title">
+    <button class="modal-x" type="button" aria-label="Fermer">&times;</button>
+    <div class="rule"><span class="lozenge"></span></div>
+    <h2 class="sec" id="thanks-title">Merci.</h2>
+    <p class="script" style="text-align:center;font-size:2.2rem;margin:6px 0 14px;">Votre message a été reçu.</p>
+    <p class="ctr muted" id="thanks-body">La famille vous est reconnaissante pour vos mots de soutien.</p>
+    <p class="ctr muted" id="thanks-public" hidden style="margin-top:10px;">Si vous avez accepté de le partager, votre message paraîtra sur le mur d'hommages après relecture par la famille.</p>
+  </div>
+</div>
+
 <script>
   // subtle fade-ins on scroll
   const io = new IntersectionObserver((entries)=>{
@@ -326,5 +367,6 @@
   }, {threshold:0.12});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
+<script src="js/tributes.js" defer></script>
 </body>
 </html>
