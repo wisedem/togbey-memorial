@@ -136,6 +136,23 @@
   .bio .lead{color:var(--ink-soft);}
   .bio .story{font-style:italic; color:var(--subtle);}
 
+  /* ---- condolences form ---- */
+  .cond{max-width:560px; margin:8px auto 0;}
+  .cond .field{margin-bottom:14px; text-align:left;}
+  .cond label{display:block; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--subtle); margin-bottom:6px;}
+  .cond input, .cond textarea{width:100%; font:inherit; color:var(--ink); background:var(--ivory); border:1px solid rgba(158,121,56,.35); border-radius:10px; padding:11px 13px;}
+  .cond textarea{min-height:130px; resize:vertical;}
+  .cond input:focus, .cond textarea:focus{outline:none; border-color:var(--gold-dark); box-shadow:0 0 0 2px rgba(158,121,56,.12);}
+  .cond .actions{text-align:center; margin-top:6px;}
+  .cond button{font:inherit; cursor:pointer; border:1px solid var(--gold-dark); background:var(--gold-dark); color:var(--ivory); padding:11px 30px; border-radius:999px; letter-spacing:.04em;}
+  .cond button:hover{background:var(--gold);}
+  .cond button:disabled{opacity:.6; cursor:default;}
+  .cond .note{text-align:center; color:var(--subtle); font-size:.84rem; margin-top:14px;}
+  .cond form.hide{display:none;}
+  .cond .thanks{display:none; text-align:center;}
+  .cond .thanks.show{display:block;}
+  .cond .thanks .script{font-size:2.4rem;}
+
   /* ---- tribute close ---- */
   .close{position:relative; text-align:center; padding:70px 0 80px; overflow:hidden;}
   .close .rip{font-size:clamp(3rem,12vw,4.6rem);}
@@ -166,6 +183,7 @@
     <a href="#ceremonies">Ceremonies</a>
     <a href="#cards">Memorial Cards</a>
     <a href="#memories">Memories</a>
+    <a href="#condolences">Condolences</a>
     <a href="#tribute">Tribute</a>
     <span class="lang"><a href="../">FR</a><a href="./" class="on">EN</a></span>
   </div>
@@ -286,6 +304,39 @@
   </div>
 </section>
 
+<!-- ============ CONDOLENCES (guestbook) ============ -->
+<section id="condolences" class="band">
+  <div class="wrap reveal">
+    <p class="eyebrow">Guest book</p>
+    <h2 class="sec">Condolences</h2>
+    <p class="ctr muted" style="max-width:520px;margin:0 auto 18px;">Leave a message of support for the family. Your words will be shared with them.</p>
+    <div class="cond">
+      <!-- FORMSPREE: replace YOUR_FORM_ID with your form's id (dashboard.formspree.io). -->
+      <form id="cform" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="field">
+          <label for="cname">Your name</label>
+          <input id="cname" type="text" name="name" required />
+        </div>
+        <div class="field">
+          <label for="cemail">Your email (optional)</label>
+          <input id="cemail" type="email" name="email" />
+        </div>
+        <div class="field">
+          <label for="cmsg">Your message</label>
+          <textarea id="cmsg" name="message" required></textarea>
+        </div>
+        <input type="hidden" name="_subject" value="New condolence message — Dr. TOGBEY" />
+        <div class="actions"><button type="submit">Send</button></div>
+        <p class="note">Your details remain private and will not be published.</p>
+      </form>
+      <div class="thanks">
+        <p class="script">Thank you for your words.</p>
+        <p class="muted">Your message has been sent to the family.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ TRIBUTE (close) ============ -->
 <section class="close" id="tribute">
   <img class="floral fl-tl" src="../img/floral-corner.png" alt="" aria-hidden="true" />
@@ -309,6 +360,27 @@
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, {threshold:0.12});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // condolences form — submit to Formspree via AJAX, stay on page
+  const cform = document.getElementById('cform');
+  if (cform) {
+    cform.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = cform.querySelector('button');
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        const res = await fetch(cform.action, {
+          method: 'POST', body: new FormData(cform), headers: {'Accept':'application/json'}
+        });
+        if (!res.ok) throw new Error('bad response');
+        cform.classList.add('hide');
+        cform.parentElement.querySelector('.thanks').classList.add('show');
+      } catch (err) {
+        btn.disabled = false; btn.textContent = 'Send';
+        alert('Sorry, sending failed. Please try again.');
+      }
+    });
+  }
 </script>
 </body>
 </html>

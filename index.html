@@ -136,6 +136,23 @@
   .bio .lead{color:var(--ink-soft);}
   .bio .story{font-style:italic; color:var(--subtle);}
 
+  /* ---- condolences form ---- */
+  .cond{max-width:560px; margin:8px auto 0;}
+  .cond .field{margin-bottom:14px; text-align:left;}
+  .cond label{display:block; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--subtle); margin-bottom:6px;}
+  .cond input, .cond textarea{width:100%; font:inherit; color:var(--ink); background:var(--ivory); border:1px solid rgba(158,121,56,.35); border-radius:10px; padding:11px 13px;}
+  .cond textarea{min-height:130px; resize:vertical;}
+  .cond input:focus, .cond textarea:focus{outline:none; border-color:var(--gold-dark); box-shadow:0 0 0 2px rgba(158,121,56,.12);}
+  .cond .actions{text-align:center; margin-top:6px;}
+  .cond button{font:inherit; cursor:pointer; border:1px solid var(--gold-dark); background:var(--gold-dark); color:var(--ivory); padding:11px 30px; border-radius:999px; letter-spacing:.04em;}
+  .cond button:hover{background:var(--gold);}
+  .cond button:disabled{opacity:.6; cursor:default;}
+  .cond .note{text-align:center; color:var(--subtle); font-size:.84rem; margin-top:14px;}
+  .cond form.hide{display:none;}
+  .cond .thanks{display:none; text-align:center;}
+  .cond .thanks.show{display:block;}
+  .cond .thanks .script{font-size:2.4rem;}
+
   /* ---- tribute close ---- */
   .close{position:relative; text-align:center; padding:70px 0 80px; overflow:hidden;}
   .close .rip{font-size:clamp(3rem,12vw,4.6rem);}
@@ -166,6 +183,7 @@
     <a href="#ceremonies">Cérémonies</a>
     <a href="#faire-part">Faire-part</a>
     <a href="#souvenirs">Souvenirs</a>
+    <a href="#condolences">Condoléances</a>
     <a href="#hommage">Hommage</a>
     <span class="lang"><a href="./" class="on">FR</a><a href="en/">EN</a></span>
   </div>
@@ -286,6 +304,39 @@
   </div>
 </section>
 
+<!-- ============ CONDOLÉANCES (guestbook) ============ -->
+<section id="condolences" class="band">
+  <div class="wrap reveal">
+    <p class="eyebrow">Livre de condoléances</p>
+    <h2 class="sec">Condoléances</h2>
+    <p class="ctr muted" style="max-width:520px;margin:0 auto 18px;">Laissez un message de soutien à la famille. Vos mots leur seront transmis.</p>
+    <div class="cond">
+      <!-- FORMSPREE : remplacez YOUR_FORM_ID par l'identifiant de votre formulaire (dashboard.formspree.io). -->
+      <form id="cform" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="field">
+          <label for="cname">Votre nom</label>
+          <input id="cname" type="text" name="name" required />
+        </div>
+        <div class="field">
+          <label for="cemail">Votre e-mail (facultatif)</label>
+          <input id="cemail" type="email" name="email" />
+        </div>
+        <div class="field">
+          <label for="cmsg">Votre message</label>
+          <textarea id="cmsg" name="message" required></textarea>
+        </div>
+        <input type="hidden" name="_subject" value="Nouveau message de condoléances — Dr. TOGBEY" />
+        <div class="actions"><button type="submit">Envoyer</button></div>
+        <p class="note">Vos coordonnées resteront confidentielles et ne seront pas publiées.</p>
+      </form>
+      <div class="thanks">
+        <p class="script">Merci pour vos mots.</p>
+        <p class="muted">Votre message a bien été transmis à la famille.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ HOMMAGE (tribute close) ============ -->
 <section class="close" id="hommage">
   <img class="floral fl-tl" src="img/floral-corner.png" alt="" aria-hidden="true" />
@@ -309,6 +360,27 @@
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, {threshold:0.12});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // condolences form — submit to Formspree via AJAX, stay on page
+  const cform = document.getElementById('cform');
+  if (cform) {
+    cform.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = cform.querySelector('button');
+      btn.disabled = true; btn.textContent = 'Envoi…';
+      try {
+        const res = await fetch(cform.action, {
+          method: 'POST', body: new FormData(cform), headers: {'Accept':'application/json'}
+        });
+        if (!res.ok) throw new Error('bad response');
+        cform.classList.add('hide');
+        cform.parentElement.querySelector('.thanks').classList.add('show');
+      } catch (err) {
+        btn.disabled = false; btn.textContent = 'Envoyer';
+        alert("Désolé, l'envoi a échoué. Veuillez réessayer.");
+      }
+    });
+  }
 </script>
 </body>
 </html>
