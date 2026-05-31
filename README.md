@@ -52,6 +52,17 @@ To add an approved message, add an object to the array in `tributes.json`:
 what tells you which messages you may copy into `tributes.json`, and it drives the pop-up's
 "will appear after review" note. The rendering logic lives in [`js/tributes.js`](js/tributes.js).
 
+### Automated sync (optional)
+
+Instead of hand-editing `tributes.json`, a GitHub Action can rebuild it from Cognito:
+[`scripts/sync_tributes.py`](scripts/sync_tributes.py) reads forms #7/#8 via the Cognito API and
+keeps entries where an **Approved** Yes/No field **and** the public-sharing field are *Yes*.
+Setup: add an "Approved" field to both forms; create a Cognito **read API key** and store it as the
+repo secret **`COGNITO_API_KEY`**; then enable the schedule in
+[`.github/workflows/sync-tributes.yml`](.github/workflows/sync-tributes.yml).
+**Once enabled, Cognito is the source of truth — don't hand-edit `tributes.json`** (the sync
+overwrites it). An entry only stays on the wall while its Cognito entry is Approved + public.
+
 ## Source (generators)
 
 The [`src/`](src/) folder holds the Python (Pillow) scripts that generate every print piece,
