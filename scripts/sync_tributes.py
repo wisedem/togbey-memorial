@@ -19,7 +19,7 @@ import sys
 import urllib.request
 import urllib.error
 
-API_BASE = "https://www.cognitoforms.com/api/v1"
+API_BASE = "https://www.cognitoforms.com/api"
 FORMS = [("7", "en"), ("8", "fr")]          # (Cognito form id, language tag)
 OUT = "tributes.json"
 PAGE_SIZE = 100
