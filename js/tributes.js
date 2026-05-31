@@ -108,12 +108,21 @@
     // expose for manual testing: window.__thanks(true|false)
     window.__thanks = open;
 
+    // Detect the public-sharing consent in the submitted entry without depending on the
+    // exact field name: scan keys whose name suggests sharing/public for a "yes"-like value.
     function isPublic(entry) {
-      if (!entry) return false;
-      var keys = ['Share', 'SharePublicly', 'MakePublic', 'Public', 'ShareMyMessagePublicly'];
-      for (var i = 0; i < keys.length; i++) {
-        var v = entry[keys[i]];
-        if (v === true || v === 'Yes' || v === 'yes' || v === 'Oui' || v === 'oui') return true;
+      if (!entry || typeof entry !== 'object') return false;
+      var keyRx = /(share|public|publi|partag)/i;
+      function yes(v) {
+        if (v === true) return true;
+        if (typeof v === 'string') {
+          var s = v.trim().toLowerCase();
+          return s === 'yes' || s === 'oui' || s === 'true' || s === 'public' || s === 'publique';
+        }
+        return false;
+      }
+      for (var k in entry) {
+        if (Object.prototype.hasOwnProperty.call(entry, k) && keyRx.test(k) && yes(entry[k])) return true;
       }
       return false;
     }
