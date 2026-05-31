@@ -11,22 +11,24 @@
     var section = document.getElementById('tributes');
     var mount = document.getElementById('tribute-wall');
     if (!section || !mount) return;
+    var navLink = document.getElementById('nav-tributes');
+    function hideNav() { if (navLink) navLink.style.display = 'none'; } // no wall -> drop its nav jump
 
     fetch('/tributes.json?v=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
       .then(function (data) {
-        if (!Array.isArray(data)) return;                       // malformed -> stay hidden
+        if (!Array.isArray(data)) { hideNav(); return; }        // malformed -> stay hidden
         // Every approved message shows on BOTH language pages, in sync — no language filter.
         var entries = data.filter(function (e) {
           return e && typeof e.message === 'string' && e.message.trim();
         });
-        if (!entries.length) return;                            // empty -> stay hidden
+        if (!entries.length) { hideNav(); return; }             // empty -> stay hidden
 
         entries.forEach(function (e) { mount.appendChild(buildCard(e)); });
         section.hidden = false;
         revealCards(section);
       })
-      .catch(function () { /* network/parse error -> section stays hidden, looks intentional */ });
+      .catch(function () { hideNav(); /* error -> section + nav link stay hidden */ });
 
     function buildCard(e) {
       var card = document.createElement('figure');
