@@ -31,7 +31,6 @@ jobs:
       - name: Sync tributes.json from Cognito
         env:
           COGNITO_API_KEY: ${{ secrets.COGNITO_API_KEY }}
-          SYNC_DIAG: '1'
         run: python3 scripts/sync_tributes.py
 
       - name: Commit & push if changed
