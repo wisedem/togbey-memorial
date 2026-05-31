@@ -40,7 +40,8 @@ To add an approved message, add an object to the array in `tributes.json`:
 ]
 ```
 
-- `name`, `message` — required. `lang` — `"fr"` shows on the French page, `"en"` on the English page.
+- `name`, `message` — required. **Every approved message shows on BOTH the French and English pages**
+  (the wall is kept in sync across languages). `lang` is optional metadata and no longer filters.
 - `place`, `date` (ISO `YYYY-MM-DD`) — optional. Entries display in file order.
 - Keep it valid JSON: comma between objects, **no** trailing comma after the last one
   (check at jsonlint.com). Commit + push and it appears within a few minutes.

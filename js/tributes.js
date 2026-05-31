@@ -16,9 +16,9 @@
       .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
       .then(function (data) {
         if (!Array.isArray(data)) return;                       // malformed -> stay hidden
+        // Every approved message shows on BOTH language pages, in sync — no language filter.
         var entries = data.filter(function (e) {
-          return e && typeof e.message === 'string' && e.message.trim() &&
-                 (e.lang ? String(e.lang).toLowerCase() === lang : true);
+          return e && typeof e.message === 'string' && e.message.trim();
         });
         if (!entries.length) return;                            // empty -> stay hidden
 
