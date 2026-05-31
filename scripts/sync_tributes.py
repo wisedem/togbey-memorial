@@ -136,6 +136,19 @@ def main():
         print("AVAILABLE FORMS:", json.dumps(forms, ensure_ascii=False)[:2000])
     except Exception as e:  # noqa: BLE001
         print("sync_tributes: could not list forms: %s" % e, file=sys.stderr)
+    if os.environ.get("SYNC_DIAG"):                           # TEMP: find the right entries path for form 7
+        def _status(path):
+            try:
+                d = _api_get(path, key)
+                return "200 (%s)" % (type(d).__name__)
+            except urllib.error.HTTPError as he:
+                return str(he.code)
+            except Exception as ex:  # noqa: BLE001
+                return "ERR " + str(ex)
+        for p in ["/forms/7", "/forms/7/entries", "/forms/7/entries?page=1&pageSize=100",
+                  "/forms/Condolences/entries", "/forms/7/entries.json", "/forms/7/Entries"]:
+            print("PROBE %-44s -> %s" % (p, _status(p)))
+        return 0
     forms_entries = []
     for form_id, lang in FORMS:
         try:
