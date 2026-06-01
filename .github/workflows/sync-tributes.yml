@@ -7,7 +7,12 @@ name: Sync tributes from Cognito
 # block below to run it automatically every ~15 minutes.
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      diag:
+        description: 'Set to 1 to probe API access (no sync/commit)'
+        required: false
+        default: ''
   # schedule:
   #   - cron: '*/15 * * * *'   # every 15 min (GitHub may delay scheduled runs a few minutes)
 
@@ -31,7 +36,7 @@ jobs:
       - name: Sync tributes.json from Cognito
         env:
           COGNITO_API_KEY: ${{ secrets.COGNITO_API_KEY }}
-          SYNC_DIAG: '1'
+          SYNC_DIAG: ${{ inputs.diag }}
         run: python3 scripts/sync_tributes.py
 
       - name: Commit & push if changed
