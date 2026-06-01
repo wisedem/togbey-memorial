@@ -131,6 +131,17 @@ def main():
     if not key:
         print("sync_tributes: COGNITO_API_KEY not set", file=sys.stderr)
         return 1
+    if os.environ.get("SYNC_DIAG"):
+        def _status(path):
+            try:
+                d = _api_get(path, key); return "200 (%s)" % type(d).__name__
+            except urllib.error.HTTPError as he:
+                return str(he.code)
+            except Exception as ex:  # noqa: BLE001
+                return "ERR " + str(ex)
+        for p in ["/forms", "/forms/7", "/forms/7/entries", "/forms/8", "/forms/8/entries"]:
+            print("PROBE %-22s -> %s" % (p, _status(p)))
+        return 0
     forms_entries = []
     for form_id, lang in FORMS:
         try:
