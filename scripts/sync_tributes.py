@@ -132,27 +132,21 @@ def main():
         print("sync_tributes: COGNITO_API_KEY not set", file=sys.stderr)
         return 1
     if os.environ.get("SYNC_DIAG"):
-        def _status(path, query_auth=False):
+        def _probe(path):
+            req = urllib.request.Request(API_BASE + path,
+                                         headers={"Authorization": "Bearer " + key, "Accept": "application/json"})
             try:
-                if query_auth:
-                    sep = "&" if "?" in path else "?"
-                    req = urllib.request.Request(API_BASE + path + sep + "access_token=" + key,
-                                                 headers={"Accept": "application/json"})
-                    with urllib.request.urlopen(req, timeout=30) as r:
-                        d = json.loads(r.read().decode("utf-8"))
-                else:
-                    d = _api_get(path, key)
-                return "200 (%s)" % type(d).__name__
+                with urllib.request.urlopen(req, timeout=30) as r:
+                    return "%s | %s" % (r.status, r.read(160).decode("utf-8", "replace").replace("\n", " "))
             except urllib.error.HTTPError as he:
-                return str(he.code)
+                body = he.read(220).decode("utf-8", "replace").replace("\n", " ") if he.fp else ""
+                return "%s | %s" % (he.code, body)
             except Exception as ex:  # noqa: BLE001
                 return "ERR " + str(ex)
-        print("PROBE %-34s -> %s" % ("/forms (bearer)", _status("/forms")))
-        print("PROBE %-34s -> %s" % ("/forms/7 (bearer)", _status("/forms/7")))
-        print("PROBE %-34s -> %s" % ("/forms/7 (access_token query)", _status("/forms/7", True)))
-        print("PROBE %-34s -> %s" % ("/forms/7/entries (access_token)", _status("/forms/7/entries", True)))
-        import hashlib
-        print("key length: %d  fingerprint: %s" % (len(key), hashlib.sha256(key.encode()).hexdigest()[:16]))
+        for p in ["/forms", "/forms/7", "/forms/7/entries", "/forms/7/entries/1",
+                  "/forms/7/entry/1", "/forms/Condolences/entries", "/forms/7/document",
+                  "/forms/7/schema"]:
+            print("PROBE %-30s -> %s" % (p, _probe(p)))
         return 0
     forms_entries = []
     for form_id, lang in FORMS:
