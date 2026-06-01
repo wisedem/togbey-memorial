@@ -164,6 +164,13 @@ def main():
 
     items = build_tributes(forms_entries)
     if os.environ.get("SYNC_DIAG"):                           # dry run: report only, write nothing
+        for lang, entries in forms_entries:
+            for e in entries:
+                if is_approved(e) and is_public(e):
+                    m = _meta(e)
+                    print("DATEDIAG %s #%s submitted=%s created=%s updated=%s ts=%s used=%s" % (
+                        lang, m.get("Number"), m.get("DateSubmitted"), m.get("DateCreated"),
+                        m.get("DateUpdated"), m.get("Timestamp"), get_timestamp(e)[:10]))
         print("DRY RUN: would write %d tribute(s); no file changes." % len(items))
         return 0
     text = json.dumps(items, ensure_ascii=False, indent=2) + "\n"
