@@ -164,6 +164,11 @@ def main():
 
     items = build_tributes(forms_entries)
     if os.environ.get("SYNC_DIAG"):                           # dry run: report only, write nothing
+        for lang, entries in forms_entries:
+            for e in entries:
+                if is_approved(e) and is_public(e):
+                    ks = sorted(k for k in e.keys() if k not in ("Entry", "Form"))  # field names only (non-PII)
+                    print("DIAG %s keys=%s has_country=%s" % (lang, ks, bool(get_country(e))))
         print("DRY RUN: would write %d tribute(s); no file changes." % len(items))
         return 0
     text = json.dumps(items, ensure_ascii=False, indent=2) + "\n"
