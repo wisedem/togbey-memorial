@@ -83,6 +83,12 @@ def is_public(entry):
     # match "Publicly"/"Publiquement" only — avoids the "...share/partager with us?" memories field
     return _any_yes(entry, r"publi")
 
+def get_country(entry):
+    v = _find(entry, r"country|pays")                     # "Country where you knew..." / "Pays où..."
+    if isinstance(v, dict):
+        v = v.get("Name") or v.get("Country") or v.get("Label") or v.get("Code") or ""
+    return v.strip() if isinstance(v, str) else ""
+
 # ---------- pure build step (unit-testable without network) ----------
 
 def build_tributes(forms_entries):
@@ -96,6 +102,9 @@ def build_tributes(forms_entries):
             if not msg:
                 continue
             it = {"name": get_name(e, lang), "message": msg, "lang": lang}
+            country = get_country(e)
+            if country:
+                it["place"] = country                         # shown on the wall as "Country · date"
             ts = get_timestamp(e)
             if ts:
                 it["date"] = ts[:10]
