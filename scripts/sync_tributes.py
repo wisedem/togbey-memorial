@@ -132,15 +132,26 @@ def main():
         print("sync_tributes: COGNITO_API_KEY not set", file=sys.stderr)
         return 1
     if os.environ.get("SYNC_DIAG"):
-        def _status(path):
+        def _status(path, query_auth=False):
             try:
-                d = _api_get(path, key); return "200 (%s)" % type(d).__name__
+                if query_auth:
+                    sep = "&" if "?" in path else "?"
+                    req = urllib.request.Request(API_BASE + path + sep + "access_token=" + key,
+                                                 headers={"Accept": "application/json"})
+                    with urllib.request.urlopen(req, timeout=30) as r:
+                        d = json.loads(r.read().decode("utf-8"))
+                else:
+                    d = _api_get(path, key)
+                return "200 (%s)" % type(d).__name__
             except urllib.error.HTTPError as he:
                 return str(he.code)
             except Exception as ex:  # noqa: BLE001
                 return "ERR " + str(ex)
-        for p in ["/forms", "/forms/7", "/forms/7/entries", "/forms/8", "/forms/8/entries"]:
-            print("PROBE %-22s -> %s" % (p, _status(p)))
+        print("PROBE %-34s -> %s" % ("/forms (bearer)", _status("/forms")))
+        print("PROBE %-34s -> %s" % ("/forms/7 (bearer)", _status("/forms/7")))
+        print("PROBE %-34s -> %s" % ("/forms/7 (access_token query)", _status("/forms/7", True)))
+        print("PROBE %-34s -> %s" % ("/forms/7/entries (access_token)", _status("/forms/7/entries", True)))
+        print("key length: %d  (a real API key is long; the embed data-key is short)" % len(key))
         return 0
     forms_entries = []
     for form_id, lang in FORMS:
