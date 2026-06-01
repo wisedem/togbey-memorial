@@ -10,11 +10,11 @@ on:
   workflow_dispatch:
     inputs:
       diag:
-        description: 'Set to 1 to probe API access (no sync/commit)'
+        description: 'Set to 1 for a dry run (read + report counts, no commit)'
         required: false
         default: ''
-  # schedule:
-  #   - cron: '*/15 * * * *'   # every 15 min (GitHub may delay scheduled runs a few minutes)
+  schedule:
+    - cron: '*/15 * * * *'   # every 15 min (GitHub may delay scheduled runs a few minutes)
 
 permissions:
   contents: write
