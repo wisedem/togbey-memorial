@@ -22,7 +22,6 @@ import urllib.error
 API_BASE = "https://www.cognitoforms.com/api"
 FORMS = [("7", "en"), ("8", "fr")]          # (Cognito form id, language tag)
 OUT = "tributes.json"
-PAGE_SIZE = 100
 
 # ---------- field extraction (name-agnostic; scans entry keys) ----------
 
@@ -43,7 +42,7 @@ def _find(entry, key_rx):
 def get_name(entry, lang):
     v = entry.get("Name")
     if v is None:
-        v = _find(entry, r"\bname\b|nom")
+        v = _find(entry, r"name|nom")                         # e.g. "YourName" / "VotreNom"
     if isinstance(v, dict):                                   # Cognito Name field -> {First, Last}
         v = " ".join(p for p in (v.get("First"), v.get("Last")) if p).strip()
     if isinstance(v, str) and v.strip():
@@ -73,11 +72,16 @@ def get_timestamp(entry):
                 return v
     return ""
 
+def _any_yes(entry, key_rx):
+    rx = re.compile(key_rx, re.I)
+    return any(rx.search(k) and _truthy_yes(v) for k, v in entry.items())
+
 def is_approved(entry):
-    return _truthy_yes(_find(entry, r"approv|approuv"))   # EN "Approved" / FR "Approuvé"
+    return _any_yes(entry, r"approv|approuv")             # EN "Approved" / FR "Approuvé"
 
 def is_public(entry):
-    return _truthy_yes(_find(entry, r"share|public|publi|partag"))
+    # match "Publicly"/"Publiquement" only — avoids the "...share/partager with us?" memories field
+    return _any_yes(entry, r"publi")
 
 # ---------- pure build step (unit-testable without network) ----------
 
@@ -111,19 +115,21 @@ def _api_get(path, key):
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.loads(r.read().decode("utf-8"))
 
-def fetch_entries(form_id, key):
-    out, page = [], 1
-    while True:
-        batch = _api_get("/forms/%s/entries?page=%d&pageSize=%d" % (form_id, page, PAGE_SIZE), key)
-        if isinstance(batch, dict):                           # tolerate a wrapped response
-            batch = (batch.get("Entries") or batch.get("entries")
-                     or next((v for v in batch.values() if isinstance(v, list)), []))
-        if not isinstance(batch, list) or not batch:
-            break
-        out.extend(batch)
-        if len(batch) < PAGE_SIZE or page > 100:
-            break
-        page += 1
+def fetch_entries(form_id, key, max_gap=20, hard_cap=5000):
+    """Cognito has no list-entries endpoint; fetch one-by-one by number
+    (/forms/{id}/entries/{n}) until a run of `max_gap` consecutive misses (tolerates
+    gaps from deleted entries). Non-404 HTTP errors propagate so we never write on failure."""
+    out, n, misses = [], 1, 0
+    while misses < max_gap and n <= hard_cap:
+        try:
+            out.append(_api_get("/forms/%s/entries/%d" % (form_id, n), key))
+            misses = 0
+        except urllib.error.HTTPError as he:
+            if he.code == 404:
+                misses += 1
+            else:
+                raise
+        n += 1
     return out
 
 def main():
@@ -131,21 +137,6 @@ def main():
     if not key:
         print("sync_tributes: COGNITO_API_KEY not set", file=sys.stderr)
         return 1
-    if os.environ.get("SYNC_DIAG"):
-        def _probe(path):
-            req = urllib.request.Request(API_BASE + path,
-                                         headers={"Authorization": "Bearer " + key, "Accept": "application/json"})
-            try:
-                with urllib.request.urlopen(req, timeout=30) as r:
-                    return "%s | %s" % (r.status, r.read(4000).decode("utf-8", "replace").replace("\n", " "))
-            except urllib.error.HTTPError as he:
-                body = he.read(220).decode("utf-8", "replace").replace("\n", " ") if he.fp else ""
-                return "%s | %s" % (he.code, body)
-            except Exception as ex:  # noqa: BLE001
-                return "ERR " + str(ex)
-        print("FULL ENTRY 7/1:", _probe("/forms/7/entries/1"))
-        print("FULL ENTRY 8/1:", _probe("/forms/8/entries/1"))
-        return 0
     forms_entries = []
     for form_id, lang in FORMS:
         try:
@@ -157,12 +148,15 @@ def main():
         except Exception as e:  # noqa: BLE001
             print("sync_tributes: API error form %s: %s" % (form_id, e), file=sys.stderr)
             return 2
-        if entries:                                           # log keys to verify field mapping
-            print("form %s (%s): %d entries; sample keys: %s"
-                  % (form_id, lang, len(entries), list(entries[0].keys())))
+        ok = sum(1 for e in entries if is_approved(e) and is_public(e))
+        # counts only — never log names/messages (this repo's Action logs are public)
+        print("form %s (%s): %d entries, %d approved+public" % (form_id, lang, len(entries), ok))
         forms_entries.append((lang, entries))
 
     items = build_tributes(forms_entries)
+    if os.environ.get("SYNC_DIAG"):                           # dry run: report only, write nothing
+        print("DRY RUN: would write %d tribute(s); no file changes." % len(items))
+        return 0
     text = json.dumps(items, ensure_ascii=False, indent=2) + "\n"
     with open(OUT, "w", encoding="utf-8") as f:
         f.write(text)
