@@ -151,7 +151,8 @@ def main():
         print("PROBE %-34s -> %s" % ("/forms/7 (bearer)", _status("/forms/7")))
         print("PROBE %-34s -> %s" % ("/forms/7 (access_token query)", _status("/forms/7", True)))
         print("PROBE %-34s -> %s" % ("/forms/7/entries (access_token)", _status("/forms/7/entries", True)))
-        print("key length: %d  (a real API key is long; the embed data-key is short)" % len(key))
+        import hashlib
+        print("key length: %d  fingerprint: %s" % (len(key), hashlib.sha256(key.encode()).hexdigest()[:16]))
         return 0
     forms_entries = []
     for form_id, lang in FORMS:
