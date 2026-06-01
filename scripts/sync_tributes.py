@@ -137,16 +137,14 @@ def main():
                                          headers={"Authorization": "Bearer " + key, "Accept": "application/json"})
             try:
                 with urllib.request.urlopen(req, timeout=30) as r:
-                    return "%s | %s" % (r.status, r.read(160).decode("utf-8", "replace").replace("\n", " "))
+                    return "%s | %s" % (r.status, r.read(4000).decode("utf-8", "replace").replace("\n", " "))
             except urllib.error.HTTPError as he:
                 body = he.read(220).decode("utf-8", "replace").replace("\n", " ") if he.fp else ""
                 return "%s | %s" % (he.code, body)
             except Exception as ex:  # noqa: BLE001
                 return "ERR " + str(ex)
-        for p in ["/forms", "/forms/7", "/forms/7/entries", "/forms/7/entries/1",
-                  "/forms/7/entry/1", "/forms/Condolences/entries", "/forms/7/document",
-                  "/forms/7/schema"]:
-            print("PROBE %-30s -> %s" % (p, _probe(p)))
+        print("FULL ENTRY 7/1:", _probe("/forms/7/entries/1"))
+        print("FULL ENTRY 8/1:", _probe("/forms/8/entries/1"))
         return 0
     forms_entries = []
     for form_id, lang in FORMS:
