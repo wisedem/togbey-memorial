@@ -39,6 +39,35 @@
       msg.textContent = e.message;                              // XSS-safe
       card.appendChild(msg);
 
+      // optional "Translate" toggle — switches between the original message and its
+      // machine translation in the opposite language (both rendered with textContent)
+      if (e.translation) {
+        var tgt = (e.lang === 'en') ? 'fr' : 'en';             // language of the translation
+        function langName(code) {
+          if (FR) return code === 'en' ? 'anglais' : 'français';
+          return code === 'en' ? 'English' : 'French';
+        }
+        var wrap2 = document.createElement('div');
+        wrap2.className = 'tribute-tx';
+        var btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'tribute-translate';
+        var note = document.createElement('span');
+        note.className = 'tribute-tnote'; note.hidden = true;
+        note.textContent = FR ? 'traduction automatique' : 'automatic translation';
+        var showingTr = false;
+        function sync() {
+          msg.textContent = showingTr ? e.translation : e.message;   // XSS-safe
+          note.hidden = !showingTr;
+          btn.textContent = showingTr
+            ? (FR ? "Voir l'original" : 'Show original')
+            : ((FR ? 'Traduire en ' : 'Translate to ') + langName(tgt));
+        }
+        btn.addEventListener('click', function () { showingTr = !showingTr; sync(); });
+        sync();
+        wrap2.appendChild(btn); wrap2.appendChild(note);
+        card.appendChild(wrap2);
+      }
+
       var foot = document.createElement('figcaption');
       foot.className = 'tribute-by';
 

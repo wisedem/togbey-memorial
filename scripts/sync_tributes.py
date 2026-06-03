@@ -18,10 +18,12 @@ import re
 import sys
 import urllib.request
 import urllib.error
+import urllib.parse
 
 API_BASE = "https://www.cognitoforms.com/api"
 FORMS = [("7", "en"), ("8", "fr")]          # (Cognito form id, language tag)
 OUT = "tributes.json"
+TRANSLATE_API = "https://api.mymemory.translated.net/get"   # free, keyless machine translation
 
 # ---------- field extraction (name-agnostic; scans entry keys) ----------
 
@@ -141,6 +143,56 @@ def fetch_entries(form_id, key, max_gap=20, hard_cap=5000):
         n += 1
     return out
 
+def _mymemory(text, src, tgt):
+    url = "%s?q=%s&langpair=%s|%s" % (TRANSLATE_API, urllib.parse.quote(text), src, tgt)
+    req = urllib.request.Request(url, headers={"Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        data = json.loads(r.read().decode("utf-8"))
+    t = (data.get("responseData") or {}).get("translatedText")
+    return t.strip() if isinstance(t, str) and t.strip() else None
+
+def translate(text, src, tgt, maxlen=480):
+    """Machine-translate text src->tgt (keyless). Chunks long text; returns None on any failure."""
+    if not text or src == tgt:
+        return None
+    try:
+        if len(text) <= maxlen:
+            return _mymemory(text, src, tgt)
+        chunks, cur = [], ""                                  # split on sentence boundaries
+        for part in re.split(r"(?<=[.!?])\s+", text):
+            if cur and len(cur) + len(part) + 1 > maxlen:
+                chunks.append(cur); cur = part
+            else:
+                cur = (cur + " " + part).strip()
+        if cur:
+            chunks.append(cur)
+        out = []
+        for c in chunks:
+            tr = _mymemory(c, src, tgt)
+            if not tr:
+                return None
+            out.append(tr)
+        return " ".join(out)
+    except Exception:  # noqa: BLE001  (translation is best-effort; never break the sync)
+        return None
+
+def add_translations(items):
+    """Add each tribute's message translated into the opposite language (cached by message)."""
+    cache = {}
+    try:                                                      # reuse prior translations for unchanged text
+        for p in json.load(open(OUT, encoding="utf-8")):
+            if p.get("message") and p.get("translation"):
+                cache[(p.get("lang"), p["message"])] = p["translation"]
+    except Exception:  # noqa: BLE001
+        pass
+    for it in items:
+        tgt = "fr" if it["lang"] == "en" else "en"
+        tr = cache.get((it["lang"], it["message"]))
+        if tr is None:
+            tr = translate(it["message"], it["lang"], tgt)
+        if tr and tr.strip().lower() != it["message"].strip().lower():
+            it["translation"] = tr
+
 def main():
     key = os.environ.get("COGNITO_API_KEY")
     if not key:
@@ -166,6 +218,9 @@ def main():
     if os.environ.get("SYNC_DIAG"):                           # dry run: report only, write nothing
         print("DRY RUN: would write %d tribute(s); no file changes." % len(items))
         return 0
+    add_translations(items)                                   # opposite-language translation per message
+    print("sync_tributes: %d/%d tribute(s) have a translation"
+          % (sum(1 for it in items if it.get("translation")), len(items)))
     text = json.dumps(items, ensure_ascii=False, indent=2) + "\n"
     with open(OUT, "w", encoding="utf-8") as f:
         f.write(text)
