@@ -91,6 +91,38 @@ def get_country(entry):
         v = v.get("Name") or v.get("Country") or v.get("Label") or v.get("Code") or ""
     return v.strip() if isinstance(v, str) else ""
 
+# Detect a message's actual language (FR vs EN) from its text, so translation works even when
+# someone writes French on the English page (or vice versa). Accents weigh heavily; common
+# stop/tribute words break ties; the form's language is the fallback on a tie.
+_FR_ACCENTS = set("àâäçéèêëîïôöùûüÿœæ")
+_FR_WORDS = {
+    "le", "la", "les", "un", "une", "des", "du", "et", "est", "ne", "pas", "vous", "nous", "tu",
+    "te", "ton", "ta", "tes", "votre", "vos", "dans", "pour", "avec", "sur", "son", "sa", "ses",
+    "aux", "que", "qui", "ce", "cette", "mon", "ma", "mes", "repose", "paix", "cher", "chere",
+    "chers", "ame", "coeur", "coeurs", "jamais", "toujours", "merci", "famille", "dieu", "frere",
+    "soeur", "bonne", "grand", "homme", "amour", "eternel", "eternelle", "adieu", "souvenir",
+    "priere", "prieres", "tellement", "oncle", "tante", "ami", "amie", "gentil", "gentille",
+    "aime", "manqueras", "manquera", "manques", "reste", "resteras", "tres", "etait", "nos",
+    "notre", "ici", "bien", "sans", "tout", "toute", "ses", "elle", "il",
+}
+_EN_WORDS = {
+    "the", "and", "you", "your", "we", "our", "he", "she", "his", "her", "they", "them", "for",
+    "with", "on", "in", "of", "to", "at", "rest", "peace", "dear", "soul", "heart", "hearts",
+    "never", "always", "thank", "thanks", "family", "god", "brother", "sister", "good", "great",
+    "man", "love", "forever", "goodbye", "bye", "memory", "memories", "will", "was", "were",
+    "have", "has", "had", "may", "miss", "missed", "beautiful", "kind", "gentle", "amazing",
+    "wonderful", "uncle", "aunt", "friend", "laughter", "advice", "impact", "inspiration",
+    "knew", "known", "father", "mother", "an", "as", "so", "from", "us",
+}
+
+def detect_lang(text, fallback="en"):
+    t = (text or "").lower()
+    fr = sum(3 for c in t if c in _FR_ACCENTS)
+    words = re.findall(r"[a-zàâäçéèêëîïôöùûüÿœæ']+", t)
+    fr += sum(1 for w in words if w in _FR_WORDS)
+    en = sum(1 for w in words if w in _EN_WORDS)
+    return "fr" if fr > en else ("en" if en > fr else fallback)
+
 # ---------- pure build step (unit-testable without network) ----------
 
 def build_tributes(forms_entries):
@@ -103,7 +135,7 @@ def build_tributes(forms_entries):
             msg = get_message(e)
             if not msg:
                 continue
-            it = {"name": get_name(e, lang), "message": msg, "lang": lang}
+            it = {"name": get_name(e, lang), "message": msg, "lang": detect_lang(msg, lang)}
             country = get_country(e)
             if country:
                 it["place"] = country                         # shown on the wall as "Country · date"
