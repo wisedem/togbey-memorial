@@ -63,8 +63,11 @@
     function formatDate(iso) {
       var d = new Date(iso);
       if (isNaN(d.getTime())) return String(iso);
+      // The stored value is a calendar date (YYYY-MM-DD) parsed as UTC midnight; format it in
+      // UTC so it shows the same day for every viewer (without timeZone it shifts a day earlier
+      // for anyone behind UTC).
       try { return d.toLocaleDateString(FR ? 'fr-FR' : 'en-GB',
-              { year: 'numeric', month: 'long', day: 'numeric' }); }
+              { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }); }
       catch (_) { return String(iso); }
     }
 
