@@ -194,7 +194,7 @@
   },
   {
     "name": "Sossinou Marcel AWOUSSI",
-    "message": "Oh Doyen! Homme de grand coeur, de sagesse et de bonté! Vois êtes et demeurerez pour moi l'un des rares hommes d'exception. \nVotre départ au côté du Créateur rappelle cette locution latine, \"MEMENTO MORI\". Mais votre esprit reste et restera éternellement Guide. Reposez-vous en Paix Doyen!",
+    "message": "Oh Doyen! Homme de grand coeur, de sagesse et de bonté! Vous êtes et demeurerez pour moi l'un des rares hommes d'exception. \nVotre départ au côté du Créateur rappelle cette locution latine, \"MEMENTO MORI\". Mais votre esprit reste et restera éternellement Guide. Reposez-vous en Paix Doyen!",
     "lang": "fr",
     "place": "Togo",
     "date": "2026-06-04",
@@ -206,5 +206,13 @@
     "lang": "fr",
     "date": "2026-06-04",
     "translation": "Sincere condolences to the Togbey family. May the Lord have mercy on our deceased father.\n\nSékou SYLLA."
+  },
+  {
+    "name": "Euphrasie",
+    "message": "Toutes mes pensées vont vers toi et ta famille en ces moments difficiles. Que ton père trouve la paix et que vous trouviez la force de traverser cette épreuve.",
+    "lang": "fr",
+    "place": "France",
+    "date": "2026-06-04",
+    "translation": "All my thoughts are with you and your family at this difficult time. May your father find peace and you find the strength to go through this ordeal."
   }
 ]
