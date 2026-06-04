@@ -3,6 +3,21 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<script>
+/* One QR for FR & EN: route English-preference visitors to /en/ by browser
+   language (preserves the #condolences hash). Respects a manual choice; never loops. */
+(function () {
+  try {
+    if (localStorage.getItem('togbeyLang')) return;          // manual choice wins
+    if (sessionStorage.getItem('togbeyAutoLang')) return;    // only once per session
+    var first = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    if (String(first).toLowerCase().indexOf('en') === 0) {
+      sessionStorage.setItem('togbeyAutoLang', '1');
+      location.replace('en/' + location.search + location.hash);
+    }
+  } catch (e) {}
+})();
+</script>
 <title>En mémoire de Dr. TOGBEY Kwamy Maoussi Félix · 1948 – 2026</title>
 <meta name="description" content="En mémoire de Dr. TOGBEY Kwamy Maoussi Félix (1948 – 2026). Programme des cérémonies, faire-part et souvenirs." />
 <link rel="icon" type="image/png" href="img/favicon.png" />
@@ -207,7 +222,7 @@
     <a href="#condolences">Condoléances</a>
     <a href="#tributes" id="nav-tributes">Hommages</a>
   </div>
-  <span class="lang"><a href="./" class="on">FR</a><a href="en/">EN</a></span>
+  <span class="lang"><a href="./" class="on" onclick="try{localStorage.setItem('togbeyLang','fr')}catch(e){}">FR</a><a href="en/" onclick="try{localStorage.setItem('togbeyLang','en')}catch(e){}">EN</a></span>
 </nav>
 
 <!-- ============ HERO ============ -->
