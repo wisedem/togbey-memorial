@@ -144,7 +144,7 @@ def build_tributes(forms_entries):
                 it["date"] = ts[:10]
             it["_ts"] = ts
             items.append(it)
-    items.sort(key=lambda x: x["_ts"])                        # chronological across both forms
+    items.sort(key=lambda x: x["_ts"], reverse=True)          # most recent first (newest at the top)
     for it in items:
         it.pop("_ts", None)
     return items
