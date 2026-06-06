@@ -144,7 +144,7 @@
   /* ---- gallery ---- */
   .gallery{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; margin-top:8px;}
   .gallery figure{margin:0; background:var(--ivory); border:1px solid rgba(158,121,56,.22); border-radius:12px; overflow:hidden; box-shadow:0 6px 20px rgba(60,48,20,.07);}
-  .gallery img{display:block; width:100%; height:420px; object-fit:contain; background:var(--ivory);}
+  .gallery img{display:block; width:100%; height:420px; object-fit:cover; object-position:center 22%;}
   .gallery figcaption{padding:12px 14px; text-align:center; color:var(--ink-soft); font-style:italic; font-size:.95rem;}
 
   /* ---- biography ---- */
@@ -324,12 +324,9 @@
     <p class="ctr muted" style="max-width:560px;margin:0 auto 22px;">Quelques images en mémoire d'une vie aimée et respectée.</p>
     <!-- To add more memories, drop photos in img/ and copy a <figure> block below. -->
     <div class="gallery">
-      <figure>
-        <img src="img/portrait.png" alt="Portrait de Dr. TOGBEY Kwamy Maoussi Félix" />
-        <figcaption>Dr. TOGBEY Kwamy Maoussi Félix</figcaption>
-      </figure>
-      <figure><img src="img/memory1.jpg" alt="Dr. TOGBEY Kwamy Maoussi Félix" /></figure>
+      <figure><img src="img/portrait.png" alt="Dr. TOGBEY Kwamy Maoussi Félix" /></figure>
       <figure><img src="img/memory2.jpg" alt="Dr. TOGBEY Kwamy Maoussi Félix" /></figure>
+      <figure><img src="img/memory1.jpg" alt="Dr. TOGBEY Kwamy Maoussi Félix" /></figure>
       <figure><img src="img/memory3.jpg" alt="Dr. TOGBEY Kwamy Maoussi Félix" /></figure>
     </div>
   </div>
