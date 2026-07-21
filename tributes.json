@@ -1,5 +1,13 @@
 [
   {
+    "name": "Fernando",
+    "message": "Repose en paix",
+    "lang": "fr",
+    "place": "Togo",
+    "date": "2026-07-16",
+    "translation": "Rest in peace."
+  },
+  {
     "name": "Erick TOGBEY",
     "message": "Repose en paix cher oncle auprès de ton Créateur. Nous n'oublierons jamais le chef de famille rassembleur que tu as été.",
     "lang": "fr",
@@ -561,5 +569,12 @@
     "lang": "en",
     "date": "2026-06-01",
     "translation": "J'ai connu papa quand il était au Mali. J'étais amie avec sa fille et il a toujours été si gentil avec nous chaque fois que nous venons rendre visite à notre amie. Que son âme repose en paix."
+  },
+  {
+    "name": "Kossi K Mawunyo",
+    "message": "Thank you for the impact you had on me. May your soul rest in peace",
+    "lang": "en",
+    "date": "2026-05-31",
+    "translation": "Merci pour l'impact que vous avez eu sur moi. Que votre âme repose en paix"
   }
 ]
