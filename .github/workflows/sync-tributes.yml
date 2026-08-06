@@ -2,9 +2,9 @@ name: Sync tributes from Cognito
 
 # Pulls approved + public condolences from Cognito into tributes.json and commits if changed.
 #
-# Starts as manual-only (Run workflow button) so it can't surprise-overwrite tributes.json
-# before you've marked entries "Approved" in Cognito. Once tested, uncomment the `schedule`
-# block below to run it automatically every ~15 minutes.
+# Currently MANUAL-ONLY (Run workflow button). The ceremonies have concluded and new
+# submissions have stopped, so the 15-minute poll was retired to stop hitting the Cognito
+# API on a loop. To resume automatic syncing, uncomment the `schedule` block below.
 
 on:
   workflow_dispatch:
@@ -13,8 +13,8 @@ on:
         description: 'Set to 1 for a dry run (read + report counts, no commit)'
         required: false
         default: ''
-  schedule:
-    - cron: '*/15 * * * *'   # every 15 min (GitHub may delay scheduled runs a few minutes)
+  # schedule:
+  #   - cron: '*/15 * * * *'   # every 15 min (GitHub may delay scheduled runs a few minutes)
 
 permissions:
   contents: write
